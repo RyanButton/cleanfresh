@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 
 export interface TRoomsDataContext {
   rooms: Room[];
-  addRoom: (name: string) => void;
+  addRoom: (name: string, color: Color) => void;
   editRoom: (name: string, newName: string) => void;
   setRooms: (room: Room[]) => void;
   setJobs: (roomName: string, jobs: Job[]) => void;
@@ -37,8 +37,8 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
   const [rooms, setRooms] = React.useState<Room[]>([]);
 
   const addRoom = React.useCallback(
-    (name: string) => {
-      setRooms([...rooms, { name, jobs: [] }]);
+    (name: string, color: Color) => {
+      setRooms([...rooms, { name, jobs: [], color }]);
     },
     [setRooms, rooms]
   );
@@ -49,7 +49,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
       setRooms(
         rooms.map((r, i) => {
           if (i === roomIndex) {
-            return { name: newName, jobs: r.jobs };
+            return { name: newName, jobs: r.jobs, color: r.color };
           }
           return r;
         })
@@ -64,7 +64,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
       setRooms(
         rooms.map((r, i) => {
           if (i === roomIndex) {
-            return { name: r.name, jobs };
+            return { name: r.name, jobs, color: r.color };
           }
           return r;
         })
@@ -79,7 +79,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
       setRooms(
         rooms.map((r, i) => {
           if (i === roomIndex) {
-            return { name: r.name, jobs: [...r.jobs, job] };
+            return { name: r.name, jobs: [...r.jobs, job], color: r.color };
           }
           return r;
         })
@@ -102,6 +102,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
                 }
                 return j;
               }),
+              color: r.color,
             };
           }
           return r;

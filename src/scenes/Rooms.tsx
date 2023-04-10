@@ -1,18 +1,16 @@
-import {
-  Card,
-  Divider,
-  IconButton,
-  Menu,
-  Portal,
-  Provider,
-  Text,
-} from "react-native-paper";
+import { Card, Menu, Portal, Provider, Text } from "react-native-paper";
 import React from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ScrollView, StyleSheet } from "react-native";
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
 import { useRoomsData } from "../providers/RoomsDataProvider";
-import { RootStackParamList } from "../App";
 import TextInputModal from "../components/TextInputModal";
+import Jobs from "./Jobs";
+import { NavigationContainer, Theme } from "@react-navigation/native";
+import { darkTheme } from "../theme";
+import AddButton from "../components/AddButton";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Rooms">;
 
@@ -35,18 +33,52 @@ const styles = StyleSheet.create({
     maxHeight: CARD_WIDTH,
     minWidth: CARD_WIDTH,
     minHeight: CARD_WIDTH,
-    borderRadius: 5,
+    borderRadius: 8,
   },
   addButton: {
     padding: 15,
     display: "flex",
     alignItems: "flex-end",
     justifyContent: "flex-end",
-    borderRadius: 5,
+    borderRadius: 8,
   },
 });
 
-export default function Rooms({ navigation, route }: Props) {
+const colors: Color[] = [
+  "rgba(228, 0, 120, 0.4)",
+  "rgba(57, 255, 20, 0.4)",
+  "rgba(51, 87, 255, 0.4)",
+  "rgba(255, 49, 49, 0.4)",
+  "rgba(224, 231, 34, 0.4)",
+  "rgba(255, 105, 180, 0.4)",
+  "rgba(255, 165, 0, 0.4)",
+  "rgba(135, 206, 235, 0.4)",
+  "rgba(224, 231, 34, 0.4)",
+];
+
+export type RootStackParamList = {
+  Rooms: undefined;
+  Jobs: { room: Room };
+};
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+export default function RoomsStack() {
+  return (
+    <NavigationContainer theme={darkTheme as unknown as Theme}>
+      <Stack.Navigator initialRouteName="Rooms">
+        <Stack.Screen name="Rooms" component={Rooms} />
+        <Stack.Screen
+          name="Jobs"
+          component={Jobs}
+          initialParams={{ room: { name: "", jobs: [], color: "#fff" } }}
+          options={({ route }) => ({ title: route.params.room.name })}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+function Rooms({ navigation, route }: Props) {
   const { rooms, addRoom, editRoom } = useRoomsData();
   const [isAddRoomModalOpen, setIsAddRoomModalOpen] = React.useState(false);
   const [isEditRoomModalOpen, setIsEditRoomModalOpen] = React.useState(false);
@@ -71,7 +103,7 @@ export default function Rooms({ navigation, route }: Props) {
   const showEditRoomModal = () => setIsEditRoomModalOpen(true);
   const hideEditRoomModal = () => setIsEditRoomModalOpen(false);
 
-  console.log("menuOpenState", menuOpenState);
+  console.log("rooms.length", rooms.length);
   return (
     <Provider>
       <Portal>
@@ -90,6 +122,7 @@ export default function Rooms({ navigation, route }: Props) {
                   id={room.name}
                   onPress={() => navigation.navigate("Jobs", { room })}
                   onLongPress={() => setMenuOpen(true, i)}
+                  style={{ backgroundColor: room.color }}
                 >
                   <Card.Content style={styles.card}>
                     <Text
@@ -122,9 +155,7 @@ export default function Rooms({ navigation, route }: Props) {
             </Menu>
           ))}
         </ScrollView>
-        <View style={styles.addButton}>
-          <IconButton icon="plus-circle" size={60} onPress={showAddRoomModal} />
-        </View>
+        <AddButton onPress={showAddRoomModal} />
         <TextInputModal
           visible={isAddRoomModalOpen}
           onDismiss={hideAddRoomModal}
@@ -134,7 +165,7 @@ export default function Rooms({ navigation, route }: Props) {
           error={!!newRoomName}
           mode="outlined"
           onSave={() => {
-            addRoom(newRoomName);
+            addRoom(newRoomName, colors[rooms.length]);
             setIsAddRoomModalOpen(false);
             setNewRoomName("");
             setMenuOpenState([...menuOpenState, false]);

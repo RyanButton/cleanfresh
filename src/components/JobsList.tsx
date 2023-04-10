@@ -1,26 +1,33 @@
 import { View, StyleSheet } from "react-native";
-import { Checkbox, Text } from "react-native-paper";
 import { useRoomsData } from "../providers/RoomsDataProvider";
-import CheckBox from "./CheckBox";
+import JobItem from "./JobItem";
+
+const styles = StyleSheet.create({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+  },
+});
 
 export default function JobsList({
   roomName,
   jobs,
+  color,
 }: {
   roomName: string;
   jobs: Job[];
+  color?: string;
 }) {
   const { setJobCompleted } = useRoomsData();
-  const func = () => {
-    console.log("pingas");
-  };
   return (
-    <View>
+    <View style={styles.container}>
       {jobs.map((j) => (
-        <CheckBox
+        <JobItem
           status={j.completed ? "checked" : "unchecked"}
           onPress={() => setJobCompleted(roomName, j.name, !j.completed)}
           label={j.name}
+          color={color}
         />
       ))}
     </View>
