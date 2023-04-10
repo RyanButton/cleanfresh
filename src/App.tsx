@@ -9,6 +9,7 @@ import {
 import Home from "./scenes/Home";
 import Rooms from "./scenes/Rooms";
 import { darkTheme } from "./theme";
+import Schedule from "./scenes/Schedule";
 
 function App() {
   const [index, setIndex] = React.useState(0);
@@ -24,7 +25,7 @@ function App() {
   const renderScene = BottomNavigation.SceneMap({
     todo: Home,
     rooms: Rooms,
-    schedule: Rooms, //TODO
+    schedule: Schedule,
   });
   return (
     <PaperProvider theme={darkTheme as unknown as MD3Theme}>

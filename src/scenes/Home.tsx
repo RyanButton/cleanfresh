@@ -1,10 +1,12 @@
 import { Text } from "react-native-paper";
-import { ScrollView, View } from "react-native";
+import { ScrollView } from "react-native";
 import { useRoomsData } from "../providers/RoomsDataProvider";
 import JobsList from "../components/JobsList";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, Theme } from "@react-navigation/native";
 import { darkTheme } from "../theme";
+import React from "react";
+import ContentBox from "../components/ContentBox";
 
 export type RootStackParamList = {
   "To Do": undefined;
@@ -23,34 +25,33 @@ export default function HomeStack() {
 
 function Home() {
   const { rooms } = useRoomsData();
+  const [hasJobs] = React.useState(
+    rooms.some((room) => !!room.jobs.length === true)
+  ); //TODO this is broken
   return (
     <ScrollView style={{ margin: 8, display: "flex", gap: 5 }}>
-      {rooms.map((room, i) => (
-        <View
-          style={{
-            backgroundColor: "rgba(73, 69, 79, 0.3)",
-            borderRadius: 8,
-            padding: 8,
-            marginBottom: 8,
-          }}
-        >
-          <Text
-            variant="titleSmall"
-            style={{ paddingBottom: 2, paddingLeft: 8 }}
-          >
-            {room.name}
-          </Text>
-          {!!room.jobs.length && (
-            <View style={{ marginTop: 2 }}>
-              <JobsList
-                roomName={room.name}
-                jobs={room.jobs}
-                color={room.color}
-              />
-            </View>
-          )}
-        </View>
-      ))}
+      {hasJobs && (
+        <>
+          {rooms.map((room, i) => (
+            <>
+              {!!room.jobs.length && (
+                <ContentBox title={room.name}>
+                  <JobsList
+                    roomName={room.name}
+                    jobs={room.jobs}
+                    color={room.color}
+                  />
+                </ContentBox>
+              )}
+            </>
+          ))}
+        </>
+      )}
+      {!hasJobs && (
+        <Text style={{ alignSelf: "center", paddingTop: 30 }}>
+          All up to date, kick back and relax!
+        </Text>
+      )}
     </ScrollView>
   );
 }
