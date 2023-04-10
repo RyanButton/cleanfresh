@@ -1,7 +1,7 @@
 import { Checkbox, Text } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
 
-export default function JobItem({
+export function JobItem({
   status,
   label,
   onPress,
@@ -41,6 +41,39 @@ export default function JobItem({
           {label}
         </Text>
       </View>
+    </View>
+  );
+}
+
+export function JobMetaItem({
+  label,
+  color,
+}: {
+  label: string;
+  color?: string;
+}) {
+  const styles = StyleSheet.create({
+    checkbox: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    container: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      backgroundColor: color ?? "rgba(228, 0, 120, 0.4)",
+      borderRadius: 8,
+      padding: 2,
+    },
+  });
+
+  return (
+    <View style={styles.container}>
+      <Text style={{ color: "white", paddingLeft: 2 }} variant="labelLarge">
+        {label}
+      </Text>
     </View>
   );
 }

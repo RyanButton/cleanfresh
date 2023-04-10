@@ -10,6 +10,7 @@ import Home from "./scenes/Home";
 import Rooms from "./scenes/Rooms";
 import { darkTheme } from "./theme";
 import Schedule from "./scenes/Schedule";
+import ScheduleDataProvider from "./providers/ScheduleProvider";
 
 function App() {
   const [index, setIndex] = React.useState(0);
@@ -30,11 +31,13 @@ function App() {
   return (
     <PaperProvider theme={darkTheme as unknown as MD3Theme}>
       <RoomsDataProvider>
-        <BottomNavigation
-          navigationState={{ index, routes }}
-          onIndexChange={setIndex}
-          renderScene={renderScene}
-        />
+        <ScheduleDataProvider>
+          <BottomNavigation
+            navigationState={{ index, routes }}
+            onIndexChange={setIndex}
+            renderScene={renderScene}
+          />
+        </ScheduleDataProvider>
       </RoomsDataProvider>
     </PaperProvider>
   );

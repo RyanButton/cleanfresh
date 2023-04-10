@@ -6,9 +6,9 @@ export interface TRoomsDataContext {
   addRoom: (name: string, color: Color) => void;
   editRoom: (name: string, newName: string) => void;
   setRooms: (room: Room[]) => void;
-  setJobs: (roomName: string, jobs: Job[]) => void;
-  addJob: (roomName: string, job: Job) => void;
-  getJobs: (roomName: string) => Job[];
+  setJobMeta: (roomName: string, jobs: JobMeta[]) => void;
+  addJobMetaItem: (roomName: string, job: JobMeta) => void;
+  getJobMeta: (roomName: string) => JobMeta[];
   setJobCompleted: (
     roomName: string,
     jobName: string,
@@ -21,9 +21,9 @@ const RoomsDataContext = React.createContext<TRoomsDataContext>({
   addRoom: () => {},
   editRoom: () => {},
   setRooms: () => {},
-  setJobs: () => {},
-  addJob: () => {},
-  getJobs: () => {
+  setJobMeta: () => {},
+  addJobMetaItem: () => {},
+  getJobMeta: () => {
     return [];
   },
   setJobCompleted: () => {},
@@ -38,7 +38,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
 
   const addRoom = React.useCallback(
     (name: string, color: Color) => {
-      setRooms([...rooms, { name, jobs: [], color }]);
+      setRooms([...rooms, { name, jobMeta: [], jobs: [], color }]);
     },
     [setRooms, rooms]
   );
@@ -49,7 +49,12 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
       setRooms(
         rooms.map((r, i) => {
           if (i === roomIndex) {
-            return { name: newName, jobs: r.jobs, color: r.color };
+            return {
+              name: newName,
+              jobMeta: r.jobMeta,
+              jobs: [],
+              color: r.color,
+            };
           }
           return r;
         })
@@ -58,13 +63,13 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
     [setRooms, rooms]
   );
 
-  const setJobs = React.useCallback(
-    (name: string, jobs: Job[]) => {
+  const setJobMeta = React.useCallback(
+    (name: string, jobMeta: JobMeta[]) => {
       const roomIndex = rooms.findIndex((room) => room.name === name);
       setRooms(
         rooms.map((r, i) => {
           if (i === roomIndex) {
-            return { name: r.name, jobs, color: r.color };
+            return { name: r.name, jobMeta: jobMeta, jobs: [], color: r.color };
           }
           return r;
         })
@@ -73,13 +78,18 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
     [setRooms, rooms]
   );
 
-  const addJob = React.useCallback(
-    (roomName: string, job: Job) => {
+  const addJobMetaItem = React.useCallback(
+    (roomName: string, jobMeta: JobMeta) => {
       const roomIndex = rooms.findIndex((room) => room.name === roomName);
       setRooms(
         rooms.map((r, i) => {
           if (i === roomIndex) {
-            return { name: r.name, jobs: [...r.jobs, job], color: r.color };
+            return {
+              name: r.name,
+              jobMeta: [...r.jobMeta, jobMeta],
+              jobs: [],
+              color: r.color,
+            };
           }
           return r;
         })
@@ -96,12 +106,13 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
           if (i === roomIndex) {
             return {
               name: r.name,
-              jobs: r.jobs.map((j) => {
+              jobMeta: r.jobMeta.map((j) => {
                 if (j.name === jobName) {
                   return { ...j, completed };
                 }
                 return j;
               }),
+              jobs: [],
               color: r.color,
             };
           }
@@ -112,10 +123,10 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
     [setRooms, rooms]
   );
 
-  const getJobs = React.useCallback(
+  const getJobMeta = React.useCallback(
     (roomName: string) => {
       const room = rooms.find((room) => room.name === roomName);
-      return room ? room.jobs : [];
+      return room ? room.jobMeta : [];
     },
     [setRooms]
   );
@@ -127,9 +138,9 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
         addRoom,
         editRoom,
         setRooms,
-        setJobs,
-        addJob,
-        getJobs,
+        setJobMeta,
+        addJobMetaItem,
+        getJobMeta,
         setJobCompleted,
       }}
     >

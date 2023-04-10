@@ -3,7 +3,7 @@ import React from "react";
 import { ScrollView } from "react-native";
 import { Portal, Provider } from "react-native-paper";
 import { RootStackParamList } from "./Rooms";
-import JobsList from "../components/JobsList";
+import { JobMetaList } from "../components/JobsList";
 import TextInputModal from "../components/TextInputModal";
 import { useRoomsData } from "../providers/RoomsDataProvider";
 import AddButton from "../components/AddButton";
@@ -15,24 +15,39 @@ export default function Jobs({ navigation, route }: Props) {
   const [newJobName, setNewJobName] = React.useState("");
   const showJobModal = () => setIsAddJobModalOpen(true);
   const hideJobModal = () => setIsAddJobModalOpen(false);
-  const { addJob, rooms } = useRoomsData();
+  const { addJobMetaItem, rooms } = useRoomsData();
   const roomName = route.params.room.name;
 
   const saveRoom = React.useCallback(() => {
-    addJob(roomName, { name: newJobName, completed: false });
+    addJobMetaItem(roomName, {
+      name: newJobName,
+      schedule: {
+        mon: false,
+        tue: false,
+        wed: false,
+        thu: false,
+        fri: false,
+        sat: false,
+        sun: false,
+      },
+    });
     setNewJobName("");
     hideJobModal();
   }, [newJobName, roomName]);
 
   const room = rooms.find((r) => r.name === roomName);
-  const jobs = room?.jobs;
+  const jobs = room?.jobMeta;
   console.log("jobs in jobs scene", jobs);
 
   return (
     <Provider>
       <Portal>
         <ScrollView style={{ margin: 8 }}>
-          <JobsList roomName={roomName} jobs={jobs || []} color={room?.color} />
+          <JobMetaList
+            roomName={roomName}
+            jobs={jobs || []}
+            color={room?.color}
+          />
         </ScrollView>
         <AddButton onPress={showJobModal} />
         <TextInputModal

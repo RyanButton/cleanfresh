@@ -1,7 +1,7 @@
 import { Text } from "react-native-paper";
 import { ScrollView } from "react-native";
 import { useRoomsData } from "../providers/RoomsDataProvider";
-import JobsList from "../components/JobsList";
+import { JobMetaList } from "../components/JobsList";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, Theme } from "@react-navigation/native";
 import { darkTheme } from "../theme";
@@ -26,7 +26,7 @@ export default function HomeStack() {
 function Home() {
   const { rooms } = useRoomsData();
   const [hasJobs] = React.useState(
-    rooms.some((room) => !!room.jobs.length === true)
+    rooms.some((room) => !!room.jobMeta.length === true)
   ); //TODO this is broken
   return (
     <ScrollView style={{ margin: 8, display: "flex", gap: 5 }}>
@@ -34,11 +34,11 @@ function Home() {
         <>
           {rooms.map((room, i) => (
             <>
-              {!!room.jobs.length && (
+              {!!room.jobMeta.length && (
                 <ContentBox title={room.name}>
-                  <JobsList
+                  <JobMetaList
                     roomName={room.name}
-                    jobs={room.jobs}
+                    jobs={room.jobMeta}
                     color={room.color}
                   />
                 </ContentBox>

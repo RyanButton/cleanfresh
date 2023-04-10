@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { ScrollView } from "react-native";
 import ContentBox from "../components/ContentBox";
-import JobsList from "../components/JobsList";
+import { JobsList } from "../components/JobsList";
 import { useRoomsData } from "../providers/RoomsDataProvider";
 import { darkTheme } from "../theme";
 
@@ -23,21 +23,26 @@ export default function RoomsStack() {
 }
 
 const days = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
+  ["Monday", "mon"],
+  ["Tuesday", "tue"],
+  ["Wednesday", "wed"],
+  ["Thursday", "thur"],
+  ["Friday", "fri"],
+  ["Saturday", "sat"],
+  ["Sunday", "sun"],
 ];
+
+enum Day {
+  longName = 0,
+  shortName = 1,
+}
 
 function Schedule() {
   const { rooms } = useRoomsData();
   return (
     <ScrollView style={{ margin: 8 }}>
       {days.map((day) => (
-        <ContentBox title={day}>
+        <ContentBox title={day[Day.longName]}>
           <>
             {rooms.map((room) => (
               <ContentBox title={room.name}>

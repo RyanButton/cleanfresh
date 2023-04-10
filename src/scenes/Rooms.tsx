@@ -70,7 +70,7 @@ export default function RoomsStack() {
         <Stack.Screen
           name="Jobs"
           component={Jobs}
-          initialParams={{ room: { name: "", jobs: [], color: "#fff" } }}
+          initialParams={{ room: { name: "", jobMeta: [], color: "#fff" } }}
           options={({ route }) => ({ title: route.params.room.name })}
         />
       </Stack.Navigator>

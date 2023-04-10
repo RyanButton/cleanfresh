@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import { useRoomsData } from "../providers/RoomsDataProvider";
-import JobItem from "./JobItem";
+import { JobMetaItem, JobItem } from "./JobItem";
 
 const styles = StyleSheet.create({
   container: {
@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function JobsList({
+export function JobsList({
   roomName,
   jobs,
   color,
@@ -29,6 +29,24 @@ export default function JobsList({
           label={j.name}
           color={color}
         />
+      ))}
+    </View>
+  );
+}
+
+export function JobMetaList({
+  roomName,
+  jobs,
+  color,
+}: {
+  roomName: string;
+  jobs: JobMeta[];
+  color?: string;
+}) {
+  return (
+    <View style={styles.container}>
+      {jobs.map((j) => (
+        <JobMetaItem label={j.name} color={color} />
       ))}
     </View>
   );
