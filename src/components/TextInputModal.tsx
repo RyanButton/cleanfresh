@@ -1,4 +1,4 @@
-import { Button, Modal, TextInput, withTheme } from "react-native-paper";
+import { Button, Modal, TextInput } from "react-native-paper";
 import { useTheme } from "react-native-paper";
 
 function TextInputModal({

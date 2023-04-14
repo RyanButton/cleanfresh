@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import { useRoomsData } from "../providers/RoomsDataProvider";
-import { JobMetaItem, JobItem } from "./JobItem";
+import { JobMetaItem, CheckBoxItem } from "./JobItem";
 
 const styles = StyleSheet.create({
   container: {
@@ -23,10 +23,10 @@ export function JobsList({
   return (
     <View style={styles.container}>
       {jobs.map((j) => (
-        <JobItem
+        <CheckBoxItem
           status={j.completed ? "checked" : "unchecked"}
-          onPress={() => setJobCompleted(roomName, j.name, !j.completed)}
-          label={j.name}
+          onPress={() => setJobCompleted(roomName, j.meta.name, !j.completed)}
+          label={j.meta.name}
           color={color}
         />
       ))}

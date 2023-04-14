@@ -38,7 +38,23 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
 
   const addRoom = React.useCallback(
     (name: string, color: Color) => {
-      setRooms([...rooms, { name, jobMeta: [], jobs: [], color }]);
+      setRooms([
+        ...rooms,
+        {
+          name,
+          jobMeta: [],
+          schedule: {
+            mon: { isShowing: false, jobs: [] },
+            tue: { isShowing: false, jobs: [] },
+            wed: { isShowing: false, jobs: [] },
+            thur: { isShowing: false, jobs: [] },
+            fri: { isShowing: false, jobs: [] },
+            sat: { isShowing: false, jobs: [] },
+            sun: { isShowing: false, jobs: [] },
+          },
+          color,
+        },
+      ]);
     },
     [setRooms, rooms]
   );
@@ -54,6 +70,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
               jobMeta: r.jobMeta,
               jobs: [],
               color: r.color,
+              schedule: r.schedule,
             };
           }
           return r;
@@ -69,7 +86,13 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
       setRooms(
         rooms.map((r, i) => {
           if (i === roomIndex) {
-            return { name: r.name, jobMeta: jobMeta, jobs: [], color: r.color };
+            return {
+              name: r.name,
+              jobMeta: jobMeta,
+              jobs: [],
+              color: r.color,
+              schedule: r.schedule,
+            };
           }
           return r;
         })
@@ -89,6 +112,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
               jobMeta: [...r.jobMeta, jobMeta],
               jobs: [],
               color: r.color,
+              schedule: r.schedule,
             };
           }
           return r;
@@ -114,6 +138,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
               }),
               jobs: [],
               color: r.color,
+              schedule: r.schedule,
             };
           }
           return r;

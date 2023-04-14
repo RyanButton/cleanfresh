@@ -1,36 +1,32 @@
 interface JobMeta {
   name: string;
-  schedule: {
-    mon: boolean;
-    tue: boolean;
-    wed: boolean;
-    thu: boolean;
-    fri: boolean;
-    sat: boolean;
-    sun: boolean;
-  };
 }
 
 interface Job {
-  name: string;
+  meta: JobMeta;
   completed: boolean;
 }
 
 interface Room {
   name: string;
   jobMeta: JobMeta[];
-  jobs: Job[];
   color: Color;
+  schedule: Schedule;
 }
 
 interface Schedule {
-  mon: Job[];
-  tue: Job[];
-  wed: Job[];
-  thur: Job[];
-  fri: Job[];
-  sat: Job[];
-  sun: Job[];
+  mon: DaySchedule;
+  tue: DaySchedule;
+  wed: DaySchedule;
+  thur: DaySchedule;
+  fri: DaySchedule;
+  sat: DaySchedule;
+  sun: DaySchedule;
+}
+
+interface DaySchedule {
+  isShowing: boolean;
+  jobs: Job[];
 }
 
 interface ScheduleJobList {}

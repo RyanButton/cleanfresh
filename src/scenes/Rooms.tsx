@@ -70,7 +70,22 @@ export default function RoomsStack() {
         <Stack.Screen
           name="Jobs"
           component={Jobs}
-          initialParams={{ room: { name: "", jobMeta: [], color: "#fff" } }}
+          initialParams={{
+            room: {
+              name: "",
+              jobMeta: [],
+              schedule: {
+                mon: { isShowing: false, jobs: [] },
+                tue: { isShowing: false, jobs: [] },
+                wed: { isShowing: false, jobs: [] },
+                thur: { isShowing: false, jobs: [] },
+                fri: { isShowing: false, jobs: [] },
+                sat: { isShowing: false, jobs: [] },
+                sun: { isShowing: false, jobs: [] },
+              },
+              color: "#fff",
+            },
+          }}
           options={({ route }) => ({ title: route.params.room.name })}
         />
       </Stack.Navigator>
@@ -119,16 +134,17 @@ function Rooms({ navigation, route }: Props) {
               }}
               anchor={
                 <Card
-                  id={room.name}
+                  key={room.name}
                   onPress={() => navigation.navigate("Jobs", { room })}
                   onLongPress={() => setMenuOpen(true, i)}
                   style={{ backgroundColor: room.color }}
                 >
-                  <Card.Content style={styles.card}>
+                  <Card.Content style={styles.card} key={room.name}>
                     <Text
                       variant="titleLarge"
                       style={{
                         textAlign: "center",
+                        color: "#fff",
                       }}
                     >
                       {room.name}
