@@ -45,15 +45,17 @@ function Home() {
         {rooms.map((room) => {
           return (
             <View style={{ width: '100%' }}>
-              {hasJobs && !!room.schedule[currentDay].isShowing && (
-                <ContentBox title={room.name}>
-                  <JobsList
-                    jobs={room.schedule[currentDay].jobs}
-                    color={room.color}
-                    roomName={room.name}
-                  />
-                </ContentBox>
-              )}
+              {hasJobs &&
+                !!room.schedule[currentDay].isShowing &&
+                !!room.schedule[currentDay].jobs.length && (
+                  <ContentBox title={room.name}>
+                    <JobsList
+                      jobs={room.schedule[currentDay].jobs}
+                      color={room.color}
+                      roomName={room.name}
+                    />
+                  </ContentBox>
+                )}
             </View>
           )
         })}

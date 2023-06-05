@@ -1,5 +1,6 @@
 import { NavigationContainer, Theme } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import Stepper from '../components/Stepper'
 import React from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 import {
@@ -221,10 +222,23 @@ function Schedule() {
     },
     [selectedJobsState, setRooms, rooms]
   )
+
   return (
     <Provider>
       <Portal>
         <ScrollView style={{ margin: 8 }}>
+          <Stepper
+            onChange={() => console.log('changed')}
+            labels={[
+              'Monday',
+              'Tuesday',
+              'Wednesday',
+              'Thursday',
+              'Friday',
+              'Saturday',
+              'Sunday',
+            ]}
+          />
           {days.map((day, dayIndex) => (
             <View>
               <ContentBox title={day[0]}>
