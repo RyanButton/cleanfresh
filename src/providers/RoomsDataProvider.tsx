@@ -43,15 +43,15 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
         {
           name,
           jobMeta: [],
-          schedule: {
-            mon: { isShowing: false, jobs: [] },
-            tue: { isShowing: false, jobs: [] },
-            wed: { isShowing: false, jobs: [] },
-            thur: { isShowing: false, jobs: [] },
-            fri: { isShowing: false, jobs: [] },
-            sat: { isShowing: false, jobs: [] },
-            sun: { isShowing: false, jobs: [] },
-          },
+          schedule: [
+            { isShowing: false, jobs: [] },
+            { isShowing: false, jobs: [] },
+            { isShowing: false, jobs: [] },
+            { isShowing: false, jobs: [] },
+            { isShowing: false, jobs: [] },
+            { isShowing: false, jobs: [] },
+            { isShowing: false, jobs: [] },
+          ],
           color,
         },
       ]);

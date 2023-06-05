@@ -18,7 +18,10 @@ export default function ContentBox({
         marginBottom: 8,
       }}
     >
-      <Text variant="titleSmall" style={{ paddingBottom: 2, paddingLeft: 8 }}>
+      <Text
+        variant="titleSmall"
+        style={{ paddingBottom: 2, paddingLeft: 8, color: "#fff" }}
+      >
         {title}
       </Text>
       <View style={{ marginTop: 2 }}>{children}</View>

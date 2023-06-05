@@ -11,19 +11,8 @@ interface Room {
   name: string;
   jobMeta: JobMeta[];
   color: Color;
-  schedule: Schedule;
+  schedule: DaySchedule[];
 }
-
-interface Schedule {
-  mon: DaySchedule;
-  tue: DaySchedule;
-  wed: DaySchedule;
-  thur: DaySchedule;
-  fri: DaySchedule;
-  sat: DaySchedule;
-  sun: DaySchedule;
-}
-
 interface DaySchedule {
   isShowing: boolean;
   jobs: Job[];

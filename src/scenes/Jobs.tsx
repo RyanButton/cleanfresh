@@ -28,8 +28,6 @@ export default function Jobs({ navigation, route }: Props) {
 
   const room = rooms.find((r) => r.name === roomName);
   const jobs = room?.jobMeta;
-  console.log("jobs in jobs scene", jobs);
-
   return (
     <Provider>
       <Portal>

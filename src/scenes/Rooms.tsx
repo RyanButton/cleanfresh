@@ -74,15 +74,15 @@ export default function RoomsStack() {
             room: {
               name: "",
               jobMeta: [],
-              schedule: {
-                mon: { isShowing: false, jobs: [] },
-                tue: { isShowing: false, jobs: [] },
-                wed: { isShowing: false, jobs: [] },
-                thur: { isShowing: false, jobs: [] },
-                fri: { isShowing: false, jobs: [] },
-                sat: { isShowing: false, jobs: [] },
-                sun: { isShowing: false, jobs: [] },
-              },
+              schedule: [
+                { isShowing: false, jobs: [] },
+                { isShowing: false, jobs: [] },
+                { isShowing: false, jobs: [] },
+                { isShowing: false, jobs: [] },
+                { isShowing: false, jobs: [] },
+                { isShowing: false, jobs: [] },
+                { isShowing: false, jobs: [] },
+              ],
               color: "#fff",
             },
           }}
@@ -118,7 +118,6 @@ function Rooms({ navigation, route }: Props) {
   const showEditRoomModal = () => setIsEditRoomModalOpen(true);
   const hideEditRoomModal = () => setIsEditRoomModalOpen(false);
 
-  console.log("rooms.length", rooms.length);
   return (
     <Provider>
       <Portal>
