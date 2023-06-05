@@ -1,33 +1,34 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
-import { ScrollView } from "react-native";
-import { Portal, Provider } from "react-native-paper";
-import { RootStackParamList } from "./Rooms";
-import { JobMetaList } from "../components/JobsList";
-import TextInputModal from "../components/TextInputModal";
-import { useRoomsData } from "../providers/RoomsDataProvider";
-import AddButton from "../components/AddButton";
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import React from 'react'
+import { ScrollView } from 'react-native'
+import { Portal, Provider } from 'react-native-paper'
+import { RootStackParamList } from './Rooms'
+import { JobMetaList } from '../components/JobsList'
+import TextInputModal from '../components/TextInputModal'
+import { useRoomsData } from '../providers/RoomsDataProvider'
+import AddButton from '../components/AddButton'
 
-type Props = NativeStackScreenProps<RootStackParamList, "Jobs">;
+type Props = NativeStackScreenProps<RootStackParamList, 'Jobs'>
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function Jobs({ navigation, route }: Props) {
-  const [isAddJobModalOpen, setIsAddJobModalOpen] = React.useState(false);
-  const [newJobName, setNewJobName] = React.useState("");
-  const showJobModal = () => setIsAddJobModalOpen(true);
-  const hideJobModal = () => setIsAddJobModalOpen(false);
-  const { addJobMetaItem, rooms } = useRoomsData();
-  const roomName = route.params.room.name;
+  const [isAddJobModalOpen, setIsAddJobModalOpen] = React.useState(false)
+  const [newJobName, setNewJobName] = React.useState('')
+  const showJobModal = () => setIsAddJobModalOpen(true)
+  const hideJobModal = () => setIsAddJobModalOpen(false)
+  const { addJobMetaItem, rooms } = useRoomsData()
+  const roomName = route.params.room.name
 
   const saveRoom = React.useCallback(() => {
     addJobMetaItem(roomName, {
       name: newJobName,
-    });
-    setNewJobName("");
-    hideJobModal();
-  }, [newJobName, roomName]);
+    })
+    setNewJobName('')
+    hideJobModal()
+  }, [addJobMetaItem, newJobName, roomName])
 
-  const room = rooms.find((r) => r.name === roomName);
-  const jobs = room?.jobMeta;
+  const room = rooms.find((r) => r.name === roomName)
+  const jobs = room?.jobMeta
   return (
     <Provider>
       <Portal>
@@ -51,5 +52,5 @@ export default function Jobs({ navigation, route }: Props) {
         />
       </Portal>
     </Provider>
-  );
+  )
 }

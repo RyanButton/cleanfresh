@@ -1,7 +1,7 @@
-import { NavigationContainer, Theme } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { NavigationContainer, Theme } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import React from 'react'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import {
   Button,
   IconButton,
@@ -10,17 +10,17 @@ import {
   Provider,
   Text,
   useTheme,
-} from "react-native-paper";
-import ContentBox from "../components/ContentBox";
-import { CheckBoxItem } from "../components/JobItem";
-import { JobsList } from "../components/JobsList";
-import { useRoomsData } from "../providers/RoomsDataProvider";
-import { darkTheme } from "../theme";
+} from 'react-native-paper'
+import ContentBox from '../components/ContentBox'
+import { CheckBoxItem } from '../components/JobItem'
+import { JobsList } from '../components/JobsList'
+import { useRoomsData } from '../providers/RoomsDataProvider'
+import { darkTheme } from '../theme'
 
 export type RootStackParamList = {
-  Schedule: undefined;
-};
-const Stack = createNativeStackNavigator<RootStackParamList>();
+  Schedule: undefined
+}
+const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export default function RoomsStack() {
   return (
@@ -29,40 +29,40 @@ export default function RoomsStack() {
         <Stack.Screen name="Schedule" component={Schedule} />
       </Stack.Navigator>
     </NavigationContainer>
-  );
+  )
 }
 
 const days = [
-  ["Monday", "mon"],
-  ["Tuesday", "tue"],
-  ["Wednesday", "wed"],
-  ["Thursday", "thur"],
-  ["Friday", "fri"],
-  ["Saturday", "sat"],
-  ["Sunday", "sun"],
-];
+  ['Monday', 'mon'],
+  ['Tuesday', 'tue'],
+  ['Wednesday', 'wed'],
+  ['Thursday', 'thur'],
+  ['Friday', 'fri'],
+  ['Saturday', 'sat'],
+  ['Sunday', 'sun'],
+]
 
 function Schedule() {
-  const theme = useTheme();
+  const theme = useTheme()
   const styles = React.useMemo(
     () =>
       StyleSheet.create({
         checkbox: {
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
         },
         container: {
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           borderRadius: 8,
           padding: 2,
         },
         modal: {
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column',
           gap: 24,
           backgroundColor: theme.colors.background,
           padding: 20,
@@ -72,68 +72,68 @@ function Schedule() {
           borderRadius: 8,
         },
       }),
-    []
-  );
-  const { rooms, setRooms } = useRoomsData();
+    [theme.colors.background]
+  )
+  const { rooms, setRooms } = useRoomsData()
 
   const [selectedRoomsState, setSelectedRoomsState] = React.useState<
     {
-      roomName: string;
-      status: "checked" | "unchecked" | "indeterminate";
+      roomName: string
+      status: 'checked' | 'unchecked' | 'indeterminate'
     }[]
   >(
     rooms.map((room) => {
-      return { roomName: room.name, status: "unchecked" };
+      return { roomName: room.name, status: 'unchecked' }
     })
-  );
+  )
 
   const [dayMenuState, setDayMenuState] = React.useState<{
-    open: boolean[];
-    dayToEdit: number;
-  }>({ open: Array(days.length).fill(false), dayToEdit: -1 });
+    open: boolean[]
+    dayToEdit: number
+  }>({ open: Array(days.length).fill(false), dayToEdit: -1 })
 
   const setDayMenuOpen = React.useCallback(
     (val: boolean, dayIndex: number) => {
       setSelectedRoomsState(
         rooms.map((room) => {
           const status = room.schedule[dayIndex].isShowing
-            ? "checked"
-            : "unchecked";
+            ? 'checked'
+            : 'unchecked'
 
           return {
             roomName: room.name,
             status,
-          };
+          }
         })
-      );
+      )
       setDayMenuState({
         open: dayMenuState.open.map((s, i) => {
           if (i === dayIndex) {
-            return val;
+            return val
           }
-          return s;
+          return s
         }),
         dayToEdit: dayIndex,
-      });
+      })
     },
     [setDayMenuState, dayMenuState, setSelectedRoomsState, rooms]
-  );
+  )
+
+  const clearSelectedRoomState = React.useCallback(() => {
+    setSelectedRoomsState(
+      rooms.map((room) => {
+        return { roomName: room.name, status: 'unchecked' }
+      })
+    )
+  }, [setSelectedRoomsState, rooms])
 
   const setRoomMenuClose = React.useCallback(() => {
     setDayMenuState({
       open: Array(days.length).fill(false),
       dayToEdit: -1,
-    });
-    clearSelectedRoomState();
-  }, [setDayMenuState]);
-
-  const clearSelectedRoomState = React.useCallback(() => {
-    setSelectedRoomsState(
-      rooms.map((room) => {
-        return { roomName: room.name, status: "unchecked" };
-      })
-    );
-  }, [setSelectedRoomsState, rooms]);
+    })
+    clearSelectedRoomState()
+  }, [setDayMenuState, clearSelectedRoomState])
 
   const onDayMenuSave = React.useCallback(
     (dayToEdit: number) => {
@@ -141,25 +141,31 @@ function Schedule() {
         rooms.map((room) => {
           for (const srs of selectedRoomsState) {
             if (srs.roomName === room.name) {
-              const newSchedule = room.schedule;
-              room.schedule[dayToEdit].isShowing = srs.status === "checked";
+              const newSchedule = room.schedule
+              room.schedule[dayToEdit].isShowing = srs.status === 'checked'
 
               return {
                 name: room.name,
                 jobMeta: room.jobMeta,
                 color: room.color,
                 schedule: newSchedule,
-              };
+              }
             }
           }
-          return room;
+          return room
         })
-      );
-      clearSelectedRoomState();
-      setRoomMenuClose();
+      )
+      clearSelectedRoomState()
+      setRoomMenuClose()
     },
-    [selectedRoomsState, setRooms, rooms]
-  );
+    [
+      setRooms,
+      rooms,
+      clearSelectedRoomState,
+      setRoomMenuClose,
+      selectedRoomsState,
+    ]
+  )
 
   const checkRoom = React.useCallback(
     (roomName: string) => {
@@ -168,53 +174,53 @@ function Schedule() {
           if (r.roomName === roomName) {
             return {
               roomName,
-              status: r.status === "checked" ? "unchecked" : "checked",
-            };
+              status: r.status === 'checked' ? 'unchecked' : 'checked',
+            }
           }
-          return r;
+          return r
         })
-      );
+      )
     },
     [selectedRoomsState, setSelectedRoomsState]
-  );
+  )
 
   const [jobMenuState, setJobMenuState] = React.useState({
     open: false,
     roomIndex: -1,
     dayIndex: -1,
-  });
+  })
 
   const [selectedJobsState, setSelectedJobsState] = React.useState<JobMeta[]>(
     []
-  );
+  )
 
   const onJobMenuSave = React.useCallback(
     (dayIndex: number, roomIndex: number) => {
-      console.log("selectedJobsState", selectedJobsState);
+      console.log('selectedJobsState', selectedJobsState)
       setRooms(
         rooms.map((room, i) => {
           if (roomIndex === i) {
-            const newSchedule = room.schedule;
+            const newSchedule = room.schedule
 
             newSchedule[dayIndex].jobs = selectedJobsState.map((j) => {
-              return { meta: j, completed: false };
-            });
+              return { meta: j, completed: false }
+            })
 
-            return { ...room, schedule: newSchedule };
+            return { ...room, schedule: newSchedule }
           }
 
-          return room;
+          return room
         })
-      );
+      )
       setJobMenuState({
         open: false,
         roomIndex: -1,
         dayIndex: -1,
-      });
-      setSelectedJobsState([]);
+      })
+      setSelectedJobsState([])
     },
-    [setSelectedJobsState, setJobMenuState, selectedJobsState]
-  );
+    [selectedJobsState, setRooms, rooms]
+  )
   return (
     <Provider>
       <Portal>
@@ -240,7 +246,7 @@ function Schedule() {
                                 open: true,
                                 roomIndex,
                                 dayIndex,
-                              });
+                              })
                             }}
                           />
                         </ContentBox>
@@ -252,7 +258,7 @@ function Schedule() {
                   icon="plus-circle"
                   size={20}
                   onPress={() => {
-                    setDayMenuOpen(true, dayIndex);
+                    setDayMenuOpen(true, dayIndex)
                   }}
                 />
               </ContentBox>
@@ -275,15 +281,15 @@ function Schedule() {
               Jobs
             </Text>
             <ScrollView>
-              <View style={{ display: "flex", gap: 2, paddingTop: 12 }}>
+              <View style={{ display: 'flex', gap: 2, paddingTop: 12 }}>
                 {rooms[jobMenuState.roomIndex] &&
                   rooms[jobMenuState.roomIndex].jobMeta.length &&
                   rooms[jobMenuState.roomIndex].jobMeta.map((jobMeta) => (
                     <CheckBoxItem
                       status={
                         selectedJobsState.some((j) => j.name === jobMeta.name)
-                          ? "checked"
-                          : "unchecked"
+                          ? 'checked'
+                          : 'unchecked'
                       }
                       onPress={() =>
                         setSelectedJobsState([...selectedJobsState, jobMeta])
@@ -314,16 +320,16 @@ function Schedule() {
               variant="bodyMedium"
               style={{ color: theme.colors.onBackground }}
             >
-              {(days[dayMenuState.dayToEdit] || [""])[0]}
+              {(days[dayMenuState.dayToEdit] || [''])[0]}
             </Text>
             <ScrollView>
-              <View style={{ display: "flex", gap: 2, paddingTop: 12 }}>
+              <View style={{ display: 'flex', gap: 2, paddingTop: 12 }}>
                 {!!rooms.length &&
                   rooms.map((room) => (
                     <CheckBoxItem
                       status={
                         selectedRoomsState.find((s) => s.roomName === room.name)
-                          ?.status || "indeterminate"
+                          ?.status || 'indeterminate'
                       }
                       onPress={() => checkRoom(room.name)}
                       label={room.name}
@@ -340,5 +346,5 @@ function Schedule() {
         </Modal>
       </Portal>
     </Provider>
-  );
+  )
 }

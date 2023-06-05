@@ -1,5 +1,5 @@
-import { Button, Modal, TextInput } from "react-native-paper";
-import { useTheme } from "react-native-paper";
+import { Button, Modal, TextInput } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
 
 function TextInputModal({
   visible,
@@ -11,23 +11,23 @@ function TextInputModal({
   mode,
   onSave,
 }: {
-  visible: boolean;
-  onDismiss: () => void;
-  label: string;
-  value: string;
-  onChangeText: React.Dispatch<React.SetStateAction<string>>;
-  error: boolean;
-  mode: "flat" | "outlined" | undefined;
-  onSave: () => void;
+  visible: boolean
+  onDismiss: () => void
+  label: string
+  value: string
+  onChangeText: React.Dispatch<React.SetStateAction<string>>
+  error: boolean
+  mode: 'flat' | 'outlined' | undefined
+  onSave: () => void
 }) {
-  const theme = useTheme();
+  const theme = useTheme()
   return (
     <Modal
       visible={visible}
       onDismiss={onDismiss}
       contentContainerStyle={{
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         gap: 24,
         backgroundColor: theme.colors.background,
         paddingLeft: 20,
@@ -51,7 +51,7 @@ function TextInputModal({
       />
       <Button onPress={onSave}>Save</Button>
     </Modal>
-  );
+  )
 }
 
-export default TextInputModal;
+export default TextInputModal

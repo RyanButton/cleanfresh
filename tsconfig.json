@@ -1,7 +1,24 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "target": "es6",
+    "lib": ["dom", "dom.iterable", "ES2022", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
-    "noUnusedLocals": true
-  }
+    "noImplicitAny": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": "./src/",
+    "noFallthroughCasesInSwitch": false,
+    "skipDefaultLibCheck": true
+  },
+  "include": ["src"]
 }

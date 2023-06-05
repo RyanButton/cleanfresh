@@ -1,18 +1,18 @@
-import React from "react";
-import { View } from "react-native";
-import { Text } from "react-native-paper";
+import React from 'react'
+import { View } from 'react-native'
+import { Text } from 'react-native-paper'
 
 export default function ContentBox({
   title,
   children,
 }: {
-  title: string;
-  children: React.ReactNode;
+  title: string
+  children: React.ReactNode
 }) {
   return (
     <View
       style={{
-        backgroundColor: "rgba(73, 69, 79, 0.3)",
+        backgroundColor: 'rgba(73, 69, 79, 0.3)',
         borderRadius: 8,
         padding: 8,
         marginBottom: 8,
@@ -20,11 +20,11 @@ export default function ContentBox({
     >
       <Text
         variant="titleSmall"
-        style={{ paddingBottom: 2, paddingLeft: 8, color: "#fff" }}
+        style={{ paddingBottom: 2, paddingLeft: 8, color: '#fff' }}
       >
         {title}
       </Text>
       <View style={{ marginTop: 2 }}>{children}</View>
     </View>
-  );
+  )
 }

@@ -1,14 +1,14 @@
-import { IconButton } from "react-native-paper";
-import { StyleSheet } from "react-native";
+import { IconButton } from 'react-native-paper'
+import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   addButton: {
-    position: "absolute",
+    position: 'absolute',
     right: 1,
     bottom: 1,
     borderRadius: 8,
   },
-});
+})
 
 export default function AddButton({ onPress }: { onPress: () => void }) {
   return (
@@ -18,5 +18,5 @@ export default function AddButton({ onPress }: { onPress: () => void }) {
       onPress={onPress}
       style={styles.addButton}
     />
-  );
+  )
 }

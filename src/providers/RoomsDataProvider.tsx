@@ -1,19 +1,19 @@
-import React, { useContext } from "react";
-import { PropsWithChildren } from "react";
+import React, { useContext } from 'react'
+import { PropsWithChildren } from 'react'
 
 export interface TRoomsDataContext {
-  rooms: Room[];
-  addRoom: (name: string, color: Color) => void;
-  editRoom: (name: string, newName: string) => void;
-  setRooms: (room: Room[]) => void;
-  setJobMeta: (roomName: string, jobs: JobMeta[]) => void;
-  addJobMetaItem: (roomName: string, job: JobMeta) => void;
-  getJobMeta: (roomName: string) => JobMeta[];
+  rooms: Room[]
+  addRoom: (name: string, color: Color) => void
+  editRoom: (name: string, newName: string) => void
+  setRooms: (room: Room[]) => void
+  setJobMeta: (roomName: string, jobs: JobMeta[]) => void
+  addJobMetaItem: (roomName: string, job: JobMeta) => void
+  getJobMeta: (roomName: string) => JobMeta[]
   setJobCompleted: (
     roomName: string,
     jobName: string,
     completed: boolean
-  ) => void;
+  ) => void
 }
 
 const RoomsDataContext = React.createContext<TRoomsDataContext>({
@@ -24,17 +24,17 @@ const RoomsDataContext = React.createContext<TRoomsDataContext>({
   setJobMeta: () => {},
   addJobMetaItem: () => {},
   getJobMeta: () => {
-    return [];
+    return []
   },
   setJobCompleted: () => {},
-});
+})
 
 export const useRoomsData = function useRoomsData() {
-  return useContext(RoomsDataContext);
-};
+  return useContext(RoomsDataContext)
+}
 
 export default function RoomsDataProvider({ children }: PropsWithChildren) {
-  const [rooms, setRooms] = React.useState<Room[]>([]);
+  const [rooms, setRooms] = React.useState<Room[]>([])
 
   const addRoom = React.useCallback(
     (name: string, color: Color) => {
@@ -54,14 +54,14 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
           ],
           color,
         },
-      ]);
+      ])
     },
     [setRooms, rooms]
-  );
+  )
 
   const editRoom = React.useCallback(
     (name: string, newName: string) => {
-      const roomIndex = rooms.findIndex((room) => room.name === name);
+      const roomIndex = rooms.findIndex((room) => room.name === name)
       setRooms(
         rooms.map((r, i) => {
           if (i === roomIndex) {
@@ -71,18 +71,18 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
               jobs: [],
               color: r.color,
               schedule: r.schedule,
-            };
+            }
           }
-          return r;
+          return r
         })
-      );
+      )
     },
     [setRooms, rooms]
-  );
+  )
 
   const setJobMeta = React.useCallback(
     (name: string, jobMeta: JobMeta[]) => {
-      const roomIndex = rooms.findIndex((room) => room.name === name);
+      const roomIndex = rooms.findIndex((room) => room.name === name)
       setRooms(
         rooms.map((r, i) => {
           if (i === roomIndex) {
@@ -92,18 +92,18 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
               jobs: [],
               color: r.color,
               schedule: r.schedule,
-            };
+            }
           }
-          return r;
+          return r
         })
-      );
+      )
     },
     [setRooms, rooms]
-  );
+  )
 
   const addJobMetaItem = React.useCallback(
     (roomName: string, jobMeta: JobMeta) => {
-      const roomIndex = rooms.findIndex((room) => room.name === roomName);
+      const roomIndex = rooms.findIndex((room) => room.name === roomName)
       setRooms(
         rooms.map((r, i) => {
           if (i === roomIndex) {
@@ -113,18 +113,18 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
               jobs: [],
               color: r.color,
               schedule: r.schedule,
-            };
+            }
           }
-          return r;
+          return r
         })
-      );
+      )
     },
     [setRooms, rooms]
-  );
+  )
 
   const setJobCompleted = React.useCallback(
     (roomName: string, jobName: string, completed: boolean) => {
-      const roomIndex = rooms.findIndex((room) => room.name === roomName);
+      const roomIndex = rooms.findIndex((room) => room.name === roomName)
       setRooms(
         rooms.map((r, i) => {
           if (i === roomIndex) {
@@ -132,29 +132,29 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
               name: r.name,
               jobMeta: r.jobMeta.map((j) => {
                 if (j.name === jobName) {
-                  return { ...j, completed };
+                  return { ...j, completed }
                 }
-                return j;
+                return j
               }),
               jobs: [],
               color: r.color,
               schedule: r.schedule,
-            };
+            }
           }
-          return r;
+          return r
         })
-      );
+      )
     },
     [setRooms, rooms]
-  );
+  )
 
   const getJobMeta = React.useCallback(
     (roomName: string) => {
-      const room = rooms.find((room) => room.name === roomName);
-      return room ? room.jobMeta : [];
+      const room = rooms.find((room) => room.name === roomName)
+      return room ? room.jobMeta : []
     },
-    [setRooms]
-  );
+    [rooms]
+  )
 
   return (
     <RoomsDataContext.Provider
@@ -171,5 +171,5 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
     >
       {children}
     </RoomsDataContext.Provider>
-  );
+  )
 }
