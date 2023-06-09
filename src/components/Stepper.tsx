@@ -4,7 +4,8 @@ import { StyleSheet } from 'react-native'
 
 type Props = {
   labels: string[]
-  onChange: () => void
+  current: number
+  setCurrent: (newCurrent: number) => void
 }
 
 const styles = StyleSheet.create({
@@ -15,8 +16,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function Stepper({ labels }: Props) {
-  const [current, setCurrent] = React.useState(0)
+export default function Stepper({ labels, current, setCurrent }: Props) {
   const handleDecrement = React.useCallback(() => {
     if (current > 0) {
       setCurrent(current - 1)
@@ -24,7 +24,7 @@ export default function Stepper({ labels }: Props) {
   }, [current, setCurrent])
 
   const handleIncrement = React.useCallback(() => {
-    if (current <= labels.length) {
+    if (current <= labels.length - 2) {
       setCurrent(current + 1)
     }
   }, [current, labels.length, setCurrent])

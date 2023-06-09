@@ -22,11 +22,10 @@ export default function HomeStack() {
   )
 }
 
-const currentDay = 0
-
 function Home() {
   const { rooms } = useRoomsData()
   const hasJobs = useHasJobs()
+  const currentDayIndex = new Date().getDay()
 
   return (
     <ScrollView style={{ margin: 8, display: 'flex', gap: 5 }}>
@@ -46,11 +45,11 @@ function Home() {
           return (
             <View style={{ width: '100%' }}>
               {hasJobs &&
-                !!room.schedule[currentDay].isShowing &&
-                !!room.schedule[currentDay].jobs.length && (
+                !!room.schedule[currentDayIndex].isShowing &&
+                !!room.schedule[currentDayIndex].jobs.length && (
                   <ContentBox title={room.name}>
                     <JobsList
-                      jobs={room.schedule[currentDay].jobs}
+                      jobs={room.schedule[currentDayIndex].jobs}
                       color={room.color}
                       roomName={room.name}
                     />

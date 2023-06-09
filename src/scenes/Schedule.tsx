@@ -17,6 +17,8 @@ import { CheckBoxItem } from '../components/JobItem'
 import { JobsList } from '../components/JobsList'
 import { useRoomsData } from '../providers/RoomsDataProvider'
 import { darkTheme } from '../theme'
+import AddButton from '../components/AddButton'
+import useDays from '../hooks/useDays'
 
 export type RootStackParamList = {
   Schedule: undefined
@@ -76,6 +78,7 @@ function Schedule() {
     [theme.colors.background]
   )
   const { rooms, setRooms } = useRoomsData()
+  const { dayNames } = useDays()
 
   const [selectedRoomsState, setSelectedRoomsState] = React.useState<
     {
@@ -223,63 +226,51 @@ function Schedule() {
     [selectedJobsState, setRooms, rooms]
   )
 
+  const [currentDay, setCurrentDay] = React.useState(0)
+
   return (
     <Provider>
       <Portal>
         <ScrollView style={{ margin: 8 }}>
           <Stepper
-            onChange={() => console.log('changed')}
-            labels={[
-              'Monday',
-              'Tuesday',
-              'Wednesday',
-              'Thursday',
-              'Friday',
-              'Saturday',
-              'Sunday',
-            ]}
+            labels={dayNames}
+            current={currentDay}
+            setCurrent={setCurrentDay}
           />
-          {days.map((day, dayIndex) => (
-            <View>
-              <ContentBox title={day[0]}>
-                {rooms.map((room, roomIndex) => (
+          <View>
+            {rooms.map((room, roomIndex) => (
+              <View>
+                {!!room.schedule[currentDay].isShowing && (
                   <View>
-                    {!!room.schedule[dayIndex].isShowing && (
-                      <View>
-                        <ContentBox title={room.name}>
-                          <JobsList
-                            jobs={room.schedule[dayIndex].jobs}
-                            color={room.color}
-                            roomName={room.name}
-                          />
-                          <IconButton
-                            icon="plus-circle"
-                            size={20}
-                            onPress={() => {
-                              setJobMenuState({
-                                open: true,
-                                roomIndex,
-                                dayIndex,
-                              })
-                            }}
-                          />
-                        </ContentBox>
-                      </View>
-                    )}
+                    <ContentBox
+                      title={room.name}
+                      actionBar={
+                        <IconButton
+                          icon="plus-circle"
+                          size={20}
+                          onPress={() => {
+                            setJobMenuState({
+                              open: true,
+                              roomIndex,
+                              dayIndex: currentDay,
+                            })
+                          }}
+                        />
+                      }
+                    >
+                      <JobsList
+                        jobs={room.schedule[currentDay].jobs}
+                        color={room.color}
+                        roomName={room.name}
+                      />
+                    </ContentBox>
                   </View>
-                ))}
-                <IconButton
-                  icon="plus-circle"
-                  size={20}
-                  onPress={() => {
-                    setDayMenuOpen(true, dayIndex)
-                  }}
-                />
-              </ContentBox>
-            </View>
-          ))}
+                )}
+              </View>
+            ))}
+          </View>
         </ScrollView>
-
+        <AddButton onPress={() => setDayMenuOpen(true, currentDay)} />
         <Modal
           visible={jobMenuState.open}
           onDismiss={() =>
