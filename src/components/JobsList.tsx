@@ -13,10 +13,12 @@ const styles = StyleSheet.create({
 export function JobsList({
   roomName,
   jobs,
+  dayIndex,
   color,
 }: {
   roomName: string
   jobs: Job[]
+  dayIndex: number
   color?: string
 }) {
   const { setJobCompleted } = useRoomsData()
@@ -25,9 +27,12 @@ export function JobsList({
       {jobs.map((j) => (
         <CheckBoxItem
           status={j.completed ? 'checked' : 'unchecked'}
-          onPress={() => setJobCompleted(roomName, j.meta.name, !j.completed)}
+          onPress={() =>
+            setJobCompleted(roomName, j.meta.name, dayIndex, !j.completed)
+          }
           label={j.meta.name}
           color={color}
+          key={`${roomName}-${j.meta.name}`}
         />
       ))}
     </View>

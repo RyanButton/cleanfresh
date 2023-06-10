@@ -262,6 +262,7 @@ function Schedule() {
                         jobs={room.schedule[currentDay].jobs}
                         color={room.color}
                         roomName={room.name}
+                        dayIndex={currentDay}
                       />
                     </ContentBox>
                   </View>

@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { PropsWithChildren } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export interface TRoomsDataContext {
   rooms: Room[]
@@ -12,8 +13,10 @@ export interface TRoomsDataContext {
   setJobCompleted: (
     roomName: string,
     jobName: string,
+    dayIndex: number,
     completed: boolean
   ) => void
+  getSchedule: (roomName: string, dayIndex: number) => DaySchedule | undefined
 }
 
 const RoomsDataContext = React.createContext<TRoomsDataContext>({
@@ -27,21 +30,51 @@ const RoomsDataContext = React.createContext<TRoomsDataContext>({
     return []
   },
   setJobCompleted: () => {},
+  getSchedule: () => {
+    return undefined
+  },
 })
 
 export const useRoomsData = function useRoomsData() {
   return useContext(RoomsDataContext)
 }
 
+const storeObject = async (key: string, obj: any) => {
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(obj))
+  } catch (e) {
+    console.log('Error saving object', e)
+  }
+}
+
+const getObject = async (key: string) => {
+  try {
+    const value = await AsyncStorage.getItem(key)
+    if (value !== null) {
+      return JSON.parse(value)
+    }
+  } catch (e) {
+    console.log('Error reading object', e)
+  }
+}
+
 export default function RoomsDataProvider({ children }: PropsWithChildren) {
   const [rooms, setRooms] = React.useState<Room[]>([])
+  const loadRooms = React.useCallback(async () => {
+    const rooms = await getObject('rooms')
+    setRooms(rooms ?? [])
+  }, [])
+
+  React.useEffect(() => {
+    loadRooms()
+  }, [loadRooms])
 
   const addRoom = React.useCallback(
     (name: string, color: Color) => {
       setRooms([
         ...rooms,
         {
-          name,
+          name: name.trim(),
           jobMeta: [],
           schedule: [
             { isShowing: false, jobs: [] },
@@ -55,6 +88,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
           color,
         },
       ])
+      storeObject('rooms', rooms)
     },
     [setRooms, rooms]
   )
@@ -76,6 +110,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
           return r
         })
       )
+      storeObject('rooms', rooms)
     },
     [setRooms, rooms]
   )
@@ -97,6 +132,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
           return r
         })
       )
+      storeObject('rooms', rooms)
     },
     [setRooms, rooms]
   )
@@ -118,32 +154,41 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
           return r
         })
       )
+      storeObject('rooms', rooms)
     },
     [setRooms, rooms]
   )
 
   const setJobCompleted = React.useCallback(
-    (roomName: string, jobName: string, completed: boolean) => {
+    (
+      roomName: string,
+      jobName: string,
+      dayIndex: number,
+      completed: boolean
+    ) => {
       const roomIndex = rooms.findIndex((room) => room.name === roomName)
       setRooms(
         rooms.map((r, i) => {
           if (i === roomIndex) {
+            const newJobs = r.schedule[dayIndex].jobs.map((j) => {
+              if (j.meta.name === jobName) {
+                return { ...j, completed }
+              }
+              return j
+            })
+            const updatedSchedule = r.schedule
+            updatedSchedule[dayIndex].jobs = newJobs
             return {
               name: r.name,
-              jobMeta: r.jobMeta.map((j) => {
-                if (j.name === jobName) {
-                  return { ...j, completed }
-                }
-                return j
-              }),
-              jobs: [],
+              jobMeta: r.jobMeta,
               color: r.color,
-              schedule: r.schedule,
+              schedule: updatedSchedule,
             }
           }
           return r
         })
       )
+      storeObject('rooms', rooms)
     },
     [setRooms, rooms]
   )
@@ -152,6 +197,13 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
     (roomName: string) => {
       const room = rooms.find((room) => room.name === roomName)
       return room ? room.jobMeta : []
+    },
+    [rooms]
+  )
+
+  const getSchedule = React.useCallback(
+    (roomName: string, dayIndex: number) => {
+      return rooms.find((r) => r.name === roomName)?.schedule[dayIndex]
     },
     [rooms]
   )
@@ -167,6 +219,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
         addJobMetaItem,
         getJobMeta,
         setJobCompleted,
+        getSchedule,
       }}
     >
       {children}

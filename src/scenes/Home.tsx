@@ -3,9 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer, Theme } from '@react-navigation/native'
 import { darkTheme } from '../theme'
 import { useRoomsData } from '../providers/RoomsDataProvider'
-import { JobsList } from '../components/JobsList'
-import ContentBox from '../components/ContentBox'
 import useHasJobs from '../hooks/useHasJobs'
+import RoomsJobList from '../components/RoomsJobList'
 
 export type RootStackParamList = {
   'To Do': undefined
@@ -26,7 +25,6 @@ function Home() {
   const { rooms } = useRoomsData()
   const hasJobs = useHasJobs()
   const currentDayIndex = new Date().getDay()
-
   return (
     <ScrollView style={{ margin: 8, display: 'flex', gap: 5 }}>
       <View>
@@ -41,23 +39,7 @@ function Home() {
             All up to date, kick back and relax!
           </Text>
         )}
-        {rooms.map((room) => {
-          return (
-            <View style={{ width: '100%' }}>
-              {hasJobs &&
-                !!room.schedule[currentDayIndex].isShowing &&
-                !!room.schedule[currentDayIndex].jobs.length && (
-                  <ContentBox title={room.name}>
-                    <JobsList
-                      jobs={room.schedule[currentDayIndex].jobs}
-                      color={room.color}
-                      roomName={room.name}
-                    />
-                  </ContentBox>
-                )}
-            </View>
-          )
-        })}
+        {hasJobs && <RoomsJobList rooms={rooms} dayIndex={currentDayIndex} />}
       </View>
     </ScrollView>
   )
