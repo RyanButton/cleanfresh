@@ -95,7 +95,7 @@ export default function RoomsStack() {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function Rooms({ navigation, route }: Props) {
-  const { rooms, addRoom, editRoom } = useRoomsData()
+  const { rooms, addRoom, editRoom, deleteRoom } = useRoomsData()
   const [isAddRoomModalOpen, setIsAddRoomModalOpen] = React.useState(false)
   const [isEditRoomModalOpen, setIsEditRoomModalOpen] = React.useState(false)
   const [roomToEdit, setRoomToEdit] = React.useState('')
@@ -152,6 +152,7 @@ function Rooms({ navigation, route }: Props) {
                   </Card.Content>
                 </Card>
               }
+              key={room.name}
             >
               <Menu.Item
                 onPress={() => {
@@ -164,7 +165,10 @@ function Rooms({ navigation, route }: Props) {
                 leadingIcon="pencil"
               />
               <Menu.Item
-                onPress={() => {}}
+                onPress={() => {
+                  deleteRoom(room.name)
+                  setMenuOpen(false, i)
+                }}
                 title="Delete"
                 leadingIcon="trash-can"
               />

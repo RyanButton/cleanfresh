@@ -6,6 +6,7 @@ export interface TRoomsDataContext {
   rooms: Room[]
   addRoom: (name: string, color: Color) => void
   editRoom: (name: string, newName: string) => void
+  deleteRoom: (roomName: string) => void
   setRooms: (room: Room[]) => void
   setJobMeta: (roomName: string, jobs: JobMeta[]) => void
   addJobMetaItem: (roomName: string, job: JobMeta) => void
@@ -23,6 +24,7 @@ const RoomsDataContext = React.createContext<TRoomsDataContext>({
   rooms: [],
   addRoom: () => {},
   editRoom: () => {},
+  deleteRoom: () => {},
   setRooms: () => {},
   setJobMeta: () => {},
   addJobMetaItem: () => {},
@@ -113,6 +115,18 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
       storeObject('rooms', rooms)
     },
     [setRooms, rooms]
+  )
+
+  const deleteRoom = React.useCallback(
+    (roomName: string) => {
+      const roomIndex = rooms.findIndex((r) => r.name === roomName)
+      if (rooms[roomIndex]) {
+        const updatedRooms = rooms.filter((r) => r.name !== roomName)
+        setRooms(updatedRooms)
+        storeObject('rooms', updatedRooms)
+      }
+    },
+    [rooms]
   )
 
   const setJobMeta = React.useCallback(
@@ -214,6 +228,7 @@ export default function RoomsDataProvider({ children }: PropsWithChildren) {
         rooms,
         addRoom,
         editRoom,
+        deleteRoom,
         setRooms,
         setJobMeta,
         addJobMetaItem,
