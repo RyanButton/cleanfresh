@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "clean-fresh",
+    "name": "Clean Fresh",
     "slug": "clean-fresh",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ryancbutton.cleanfresh"

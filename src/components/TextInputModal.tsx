@@ -36,7 +36,7 @@ function TextInputModal({
         paddingBottom: 20,
         marginLeft: 20,
         marginRight: 20,
-        marginBottom: 400,
+        // marginBottom: 400,
         borderRadius: 8,
       }}
     >

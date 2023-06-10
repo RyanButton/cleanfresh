@@ -1,6 +1,6 @@
 import React from 'react'
-import { IconButton, Text } from 'react-native-paper'
-import { StyleSheet } from 'react-native'
+import { IconButton } from 'react-native-paper'
+import { StyleSheet, View, Text } from 'react-native'
 
 type Props = {
   labels: string[]
@@ -11,6 +11,7 @@ type Props = {
 const styles = StyleSheet.create({
   stepper: {
     display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -29,11 +30,12 @@ export default function Stepper({ labels, current, setCurrent }: Props) {
     }
   }, [current, labels.length, setCurrent])
 
+  console.log(labels[current])
   return (
-    <div className="stepper" style={styles.stepper}>
+    <View style={styles.stepper}>
       <IconButton icon="chevron-left" size={30} onPress={handleDecrement} />
-      <Text>{labels[current]}</Text>
+      <Text style={{ color: '#fff' }}>{labels[current]}</Text>
       <IconButton icon="chevron-right" size={30} onPress={handleIncrement} />
-    </div>
+    </View>
   )
 }
