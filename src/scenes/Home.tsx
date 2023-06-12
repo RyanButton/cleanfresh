@@ -23,8 +23,8 @@ export default function HomeStack() {
 
 function Home() {
   const { rooms } = useRoomsData()
-  const hasJobs = useHasJobs()
   const currentDayIndex = new Date().getDay()
+  const hasJobs = useHasJobs(currentDayIndex)
   return (
     <ScrollView style={{ margin: 8, display: 'flex', gap: 5 }}>
       <View>

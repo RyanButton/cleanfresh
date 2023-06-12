@@ -1,19 +1,15 @@
 import React from 'react'
 import { useRoomsData } from '../providers/RoomsDataProvider'
 
-export default function useHasJobs() {
+export default function useHasJobs(dayIndex: number) {
   const { rooms } = useRoomsData()
 
   const hasJobs = React.useMemo(() => {
     for (const room of rooms) {
-      for (const day of room.schedule) {
-        if (!!day.jobs.length) {
-          return true
-        }
-      }
+      const day = room.schedule[dayIndex]
+      return !!day.jobs.length
     }
-    return false
-  }, [rooms])
+  }, [dayIndex, rooms])
 
   return hasJobs
 }
