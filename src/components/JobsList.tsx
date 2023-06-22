@@ -22,6 +22,7 @@ export function JobsList({
   color?: string
 }) {
   const { setJobCompleted } = useRoomsData()
+  console.log('jobs', jobs)
   return (
     <View style={styles.container}>
       {jobs.map((j) => (

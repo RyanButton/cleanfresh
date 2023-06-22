@@ -1,4 +1,4 @@
-import { NavigationContainer, Theme } from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Stepper from '../components/Stepper'
 import React from 'react'
@@ -16,7 +16,6 @@ import ContentBox from '../components/ContentBox'
 import { CheckBoxItem } from '../components/JobItem'
 import { JobsList } from '../components/JobsList'
 import { useRoomsData } from '../providers/RoomsDataProvider'
-import { darkTheme } from '../theme'
 import AddButton from '../components/AddButton'
 import useDays from '../hooks/useDays'
 
@@ -27,7 +26,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export default function RoomsStack() {
   return (
-    <NavigationContainer theme={darkTheme as unknown as Theme}>
+    <NavigationContainer>
       <Stack.Navigator initialRouteName="Schedule">
         <Stack.Screen name="Schedule" component={Schedule} />
       </Stack.Navigator>
@@ -200,7 +199,6 @@ function Schedule() {
 
   const onJobMenuSave = React.useCallback(
     (dayIndex: number, roomIndex: number) => {
-      console.log('selectedJobsState', selectedJobsState)
       setRooms(
         rooms.map((room, i) => {
           if (roomIndex === i) {
@@ -226,8 +224,7 @@ function Schedule() {
     [selectedJobsState, setRooms, rooms]
   )
 
-  const [currentDay, setCurrentDay] = React.useState(0)
-
+  const [currentDay, setCurrentDay] = React.useState(new Date().getDay())
   return (
     <Provider>
       <Portal>
@@ -288,8 +285,8 @@ function Schedule() {
             </Text>
             <ScrollView>
               <View style={{ display: 'flex', gap: 2, paddingTop: 12 }}>
-                {rooms[jobMenuState.roomIndex] &&
-                  rooms[jobMenuState.roomIndex].jobMeta.length &&
+                {!!rooms[jobMenuState.roomIndex] &&
+                  !!rooms[jobMenuState.roomIndex].jobMeta.length &&
                   rooms[jobMenuState.roomIndex].jobMeta.map((jobMeta) => (
                     <CheckBoxItem
                       status={
@@ -301,9 +298,13 @@ function Schedule() {
                         setSelectedJobsState([...selectedJobsState, jobMeta])
                       }
                       label={jobMeta.name}
-                      color="rgba(73, 69, 79, 0.3)"
+                      key={`${jobMeta.name}-${jobMenuState.roomIndex}`}
                     />
                   ))}
+                {!(
+                  !!rooms[jobMenuState.roomIndex] &&
+                  !!rooms[jobMenuState.roomIndex].jobMeta.length
+                ) && <Text>No jobs</Text>}
               </View>
             </ScrollView>
             <Button
@@ -326,7 +327,7 @@ function Schedule() {
               variant="bodyMedium"
               style={{ color: theme.colors.onBackground }}
             >
-              {(days[dayMenuState.dayToEdit] || [''])[0]}
+              {dayNames[dayMenuState.dayToEdit] || ''}
             </Text>
             <ScrollView>
               <View style={{ display: 'flex', gap: 2, paddingTop: 12 }}>
@@ -339,7 +340,6 @@ function Schedule() {
                       }
                       onPress={() => checkRoom(room.name)}
                       label={room.name}
-                      color="rgba(73, 69, 79, 0.3)"
                     />
                   ))}
                 {!rooms.length && <Text>No rooms</Text>}

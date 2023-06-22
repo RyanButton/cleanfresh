@@ -30,11 +30,17 @@ export function CheckBoxItem({
     },
   })
 
+  console.log('job', {
+    status,
+    label,
+    color,
+  })
+
   return (
     <View style={styles.container}>
       <View style={styles.checkbox}>
         <Checkbox.Android status={status} onPress={onPress} />
-        <Text style={{ color: 'white', paddingLeft: 2 }} variant="labelLarge">
+        <Text style={{ paddingLeft: 2 }} variant="labelLarge">
           {label}
         </Text>
       </View>

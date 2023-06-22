@@ -21,20 +21,23 @@ export default function Stepper({ labels, current, setCurrent }: Props) {
   const handleDecrement = React.useCallback(() => {
     if (current > 0) {
       setCurrent(current - 1)
+    } else {
+      setCurrent(6)
     }
   }, [current, setCurrent])
 
   const handleIncrement = React.useCallback(() => {
-    if (current <= labels.length - 2) {
+    if (current < 6) {
       setCurrent(current + 1)
+    } else {
+      setCurrent(0)
     }
-  }, [current, labels.length, setCurrent])
+  }, [current, setCurrent])
 
-  console.log(labels[current])
   return (
     <View style={styles.stepper}>
       <IconButton icon="chevron-left" size={30} onPress={handleDecrement} />
-      <Text style={{ color: '#fff' }}>{labels[current]}</Text>
+      <Text>{labels[current]}</Text>
       <IconButton icon="chevron-right" size={30} onPress={handleIncrement} />
     </View>
   )

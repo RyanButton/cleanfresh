@@ -8,8 +8,7 @@ import {
 import { useRoomsData } from '../providers/RoomsDataProvider'
 import TextInputModal from '../components/TextInputModal'
 import Jobs from './Jobs'
-import { NavigationContainer, Theme } from '@react-navigation/native'
-import { darkTheme } from '../theme'
+import { NavigationContainer } from '@react-navigation/native'
 import AddButton from '../components/AddButton'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Rooms'>
@@ -64,7 +63,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export default function RoomsStack() {
   return (
-    <NavigationContainer theme={darkTheme as unknown as Theme}>
+    <NavigationContainer>
       <Stack.Navigator initialRouteName="Rooms">
         <Stack.Screen name="Rooms" component={Rooms} />
         <Stack.Screen

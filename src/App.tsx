@@ -1,14 +1,9 @@
 import { registerRootComponent } from 'expo'
 import React from 'react'
 import RoomsDataProvider from './providers/RoomsDataProvider'
-import {
-  BottomNavigation,
-  MD3Theme,
-  Provider as PaperProvider,
-} from 'react-native-paper'
+import { BottomNavigation, Provider as PaperProvider } from 'react-native-paper'
 import Home from './scenes/Home'
 import Rooms from './scenes/Rooms'
-import { darkTheme } from './theme'
 import Schedule from './scenes/Schedule'
 
 function App() {
@@ -28,7 +23,7 @@ function App() {
     schedule: Schedule,
   })
   return (
-    <PaperProvider theme={darkTheme as unknown as MD3Theme}>
+    <PaperProvider>
       <RoomsDataProvider>
         <BottomNavigation
           navigationState={{ index, routes }}

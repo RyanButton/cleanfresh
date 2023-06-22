@@ -7,8 +7,11 @@ export default function useHasJobs(dayIndex: number) {
   const hasJobs = React.useMemo(() => {
     for (const room of rooms) {
       const day = room.schedule[dayIndex]
-      return !!day.jobs.length
+      if (!!day.jobs.length) {
+        return true
+      }
     }
+    return false
   }, [dayIndex, rooms])
 
   return hasJobs

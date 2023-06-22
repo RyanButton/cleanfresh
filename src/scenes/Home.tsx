@@ -1,7 +1,6 @@
 import { ScrollView, View, Text } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { NavigationContainer, Theme } from '@react-navigation/native'
-import { darkTheme } from '../theme'
+import { NavigationContainer } from '@react-navigation/native'
 import { useRoomsData } from '../providers/RoomsDataProvider'
 import useHasJobs from '../hooks/useHasJobs'
 import RoomsJobList from '../components/RoomsJobList'
@@ -13,7 +12,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export default function HomeStack() {
   return (
-    <NavigationContainer theme={darkTheme as unknown as Theme}>
+    <NavigationContainer>
       <Stack.Navigator initialRouteName="To Do">
         <Stack.Screen name="To Do" component={Home} />
       </Stack.Navigator>
@@ -31,7 +30,6 @@ function Home() {
         {!hasJobs && (
           <Text
             style={{
-              color: '#fff',
               textAlign: 'center',
               marginTop: 16,
             }}
