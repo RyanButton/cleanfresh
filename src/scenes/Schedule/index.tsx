@@ -1,27 +1,37 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Stepper from '../components/Stepper'
+import Stepper from '../../components/Stepper'
 import React from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
-import {
-  Button,
-  IconButton,
-  Modal,
-  Portal,
-  Provider,
-  Text,
-  useTheme,
-} from 'react-native-paper'
-import ContentBox from '../components/ContentBox'
-import { CheckBoxItem } from '../components/JobItem'
-import { JobsList } from '../components/JobsList'
-import { useRoomsData } from '../providers/RoomsDataProvider'
-import AddButton from '../components/AddButton'
-import useDays from '../hooks/useDays'
+import { ScrollView, View } from 'react-native'
+import { IconButton, Portal, Provider } from 'react-native-paper'
+import ContentBox from '../../components/ContentBox'
+import { JobsList } from '../../components/JobsList'
+import { useRoomsData } from '../../providers/RoomsDataProvider'
+import AddButton from '../../components/AddButton'
+import useDays from '../../hooks/useDays'
+import AddJobToScheduleModal from './components/AddJobToScheduleModal'
+import AddRoomToDayModal from './components/AddRoomToDayModal'
 
 export type RootStackParamList = {
   Schedule: undefined
 }
+
+export type JobMenuState = {
+  open: boolean
+  roomIndex: number
+  dayIndex: number
+}
+
+export type DayMenuState = {
+  open: boolean[]
+  dayToEdit: number
+}
+
+export type SelectedRoomState = {
+  roomName: string
+  status: 'checked' | 'unchecked' | 'indeterminate'
+}
+
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export default function RoomsStack() {
@@ -45,55 +55,21 @@ const days = [
 ]
 
 function Schedule() {
-  const theme = useTheme()
-  const styles = React.useMemo(
-    () =>
-      StyleSheet.create({
-        checkbox: {
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-        },
-        container: {
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          borderRadius: 8,
-          padding: 2,
-        },
-        modal: {
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 24,
-          backgroundColor: theme.colors.background,
-          padding: 20,
-          paddingBottom: 20,
-          marginLeft: 20,
-          marginRight: 20,
-          borderRadius: 8,
-        },
-      }),
-    [theme.colors.background]
-  )
   const { rooms, setRooms } = useRoomsData()
   const { dayNames } = useDays()
 
   const [selectedRoomsState, setSelectedRoomsState] = React.useState<
-    {
-      roomName: string
-      status: 'checked' | 'unchecked' | 'indeterminate'
-    }[]
+    SelectedRoomState[]
   >(
     rooms.map((room) => {
       return { roomName: room.name, status: 'unchecked' }
     })
   )
 
-  const [dayMenuState, setDayMenuState] = React.useState<{
-    open: boolean[]
-    dayToEdit: number
-  }>({ open: Array(days.length).fill(false), dayToEdit: -1 })
+  const [dayMenuState, setDayMenuState] = React.useState<DayMenuState>({
+    open: Array(days.length).fill(false),
+    dayToEdit: -1,
+  })
 
   const setDayMenuOpen = React.useCallback(
     (val: boolean, dayIndex: number) => {
@@ -170,24 +146,7 @@ function Schedule() {
     ]
   )
 
-  const checkRoom = React.useCallback(
-    (roomName: string) => {
-      setSelectedRoomsState(
-        selectedRoomsState.map((r) => {
-          if (r.roomName === roomName) {
-            return {
-              roomName,
-              status: r.status === 'checked' ? 'unchecked' : 'checked',
-            }
-          }
-          return r
-        })
-      )
-    },
-    [selectedRoomsState, setSelectedRoomsState]
-  )
-
-  const [jobMenuState, setJobMenuState] = React.useState({
+  const [jobMenuState, setJobMenuState] = React.useState<JobMenuState>({
     open: false,
     roomIndex: -1,
     dayIndex: -1,
@@ -268,88 +227,25 @@ function Schedule() {
             ))}
           </View>
         </ScrollView>
-        <AddButton onPress={() => setDayMenuOpen(true, currentDay)} />
-        <Modal
-          visible={jobMenuState.open}
-          onDismiss={() =>
-            setJobMenuState({ open: false, roomIndex: -1, dayIndex: -1 })
-          }
-          contentContainerStyle={styles.modal}
-        >
-          <View>
-            <Text
-              variant="bodyMedium"
-              style={{ color: theme.colors.onBackground }}
-            >
-              Jobs
-            </Text>
-            <ScrollView>
-              <View style={{ display: 'flex', gap: 2, paddingTop: 12 }}>
-                {!!rooms[jobMenuState.roomIndex] &&
-                  !!rooms[jobMenuState.roomIndex].jobMeta.length &&
-                  rooms[jobMenuState.roomIndex].jobMeta.map((jobMeta) => (
-                    <CheckBoxItem
-                      status={
-                        selectedJobsState.some((j) => j.name === jobMeta.name)
-                          ? 'checked'
-                          : 'unchecked'
-                      }
-                      onPress={() =>
-                        setSelectedJobsState([...selectedJobsState, jobMeta])
-                      }
-                      label={jobMeta.name}
-                      key={`${jobMeta.name}-${jobMenuState.roomIndex}`}
-                    />
-                  ))}
-                {!(
-                  !!rooms[jobMenuState.roomIndex] &&
-                  !!rooms[jobMenuState.roomIndex].jobMeta.length
-                ) && <Text>No jobs</Text>}
-              </View>
-            </ScrollView>
-            <Button
-              onPress={() =>
-                onJobMenuSave(jobMenuState.dayIndex, jobMenuState.roomIndex)
-              }
-            >
-              Save
-            </Button>
-          </View>
-        </Modal>
 
-        <Modal
-          visible={dayMenuState.open[dayMenuState.dayToEdit]}
-          onDismiss={() => setRoomMenuClose()}
-          contentContainerStyle={styles.modal}
-        >
-          <View>
-            <Text
-              variant="bodyMedium"
-              style={{ color: theme.colors.onBackground }}
-            >
-              {dayNames[dayMenuState.dayToEdit] || ''}
-            </Text>
-            <ScrollView>
-              <View style={{ display: 'flex', gap: 2, paddingTop: 12 }}>
-                {!!rooms.length &&
-                  rooms.map((room) => (
-                    <CheckBoxItem
-                      status={
-                        selectedRoomsState.find((s) => s.roomName === room.name)
-                          ?.status || 'indeterminate'
-                      }
-                      onPress={() => checkRoom(room.name)}
-                      label={room.name}
-                    />
-                  ))}
-                {!rooms.length && <Text>No rooms</Text>}
-              </View>
-            </ScrollView>
-            <Button onPress={() => onDayMenuSave(dayMenuState.dayToEdit)}>
-              Save
-            </Button>
-          </View>
-        </Modal>
+        <AddJobToScheduleModal
+          rooms={rooms}
+          jobMenuState={jobMenuState}
+          selectedJobsState={selectedJobsState}
+          setJobMenuState={setJobMenuState}
+          setSelectedJobsState={setSelectedJobsState}
+          onJobMenuSave={onJobMenuSave}
+        />
+
+        <AddRoomToDayModal
+          rooms={rooms}
+          dayMenuState={dayMenuState}
+          selectedRoomsState={selectedRoomsState}
+          setRoomMenuClose={setRoomMenuClose}
+          setSelectedRoomsState={setRoomMenuClose}
+          onDayMenuSave={onDayMenuSave}
+        />
+        <AddButton onPress={() => setDayMenuOpen(true, currentDay)} />
       </Portal>
     </Provider>
   )

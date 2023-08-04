@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: 'rgba(73, 69, 79, 0.3)',
+    backgroundColor: '#D3D3D3',
     borderRadius: 8,
     padding: 8,
     marginBottom: 8,
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   headerText: {
-    color: '#fff',
+    color: '#696969',
     padding: 8,
   },
 })
