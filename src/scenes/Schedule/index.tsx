@@ -184,6 +184,8 @@ function Schedule() {
   )
 
   const [currentDay, setCurrentDay] = React.useState(new Date().getDay())
+
+  console.log('selectedRoomsState', selectedRoomsState)
   return (
     <Provider>
       <Portal>
@@ -242,7 +244,7 @@ function Schedule() {
           dayMenuState={dayMenuState}
           selectedRoomsState={selectedRoomsState}
           setRoomMenuClose={setRoomMenuClose}
-          setSelectedRoomsState={setRoomMenuClose}
+          setSelectedRoomsState={setSelectedRoomsState}
           onDayMenuSave={onDayMenuSave}
         />
         <AddButton onPress={() => setDayMenuOpen(true, currentDay)} />

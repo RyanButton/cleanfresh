@@ -51,7 +51,7 @@ export function JobMetaList({
   return (
     <View style={styles.container}>
       {jobs.map((j) => (
-        <JobMetaItem label={j.name} color={color} />
+        <JobMetaItem label={j.name} color={color} key={j.name} />
       ))}
     </View>
   )

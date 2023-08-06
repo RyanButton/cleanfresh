@@ -1,11 +1,11 @@
-import { CheckBoxItem } from 'components/JobItem'
-import useDays from 'hooks/useDays'
 import React from 'react'
-import { Button, Modal, Text } from 'react-native-paper'
-import { getTheme } from 'react-native-paper/lib/typescript/src/core/theming'
-import { ScrollView, View } from 'react-native/types'
+import { Button, Modal, Text, useTheme } from 'react-native-paper'
+import { ScrollView, View } from 'react-native'
+import { CheckBoxItem } from '../../../components/JobItem'
+import useDays from '../../../hooks/useDays'
 import { DayMenuState, SelectedRoomState } from '..'
-import styles from '../styles'
+import useStyles from '../useStyles'
+import AddRoomModal from '../../../scenes/Rooms/AddRoomModal'
 
 type Props = {
   rooms: Room[]
@@ -25,8 +25,10 @@ export default function AddRoomToDayModal({
   setSelectedRoomsState,
   onDayMenuSave,
 }: Props) {
-  const theme = getTheme()
+  const theme = useTheme()
+  const styles = useStyles(theme)
   const { dayNames } = useDays()
+  const [addRoomModalOpen, setAddRoomModalOpen] = React.useState(false)
 
   const checkRoom = React.useCallback(
     (roomName: string) => {
@@ -45,6 +47,15 @@ export default function AddRoomToDayModal({
     [selectedRoomsState, setSelectedRoomsState]
   )
 
+  if (addRoomModalOpen) {
+    return (
+      <AddRoomModal
+        visible={addRoomModalOpen}
+        onDismiss={() => setAddRoomModalOpen(false)}
+      />
+    )
+  }
+
   return (
     <Modal
       visible={dayMenuState.open[dayMenuState.dayToEdit]}
@@ -52,7 +63,7 @@ export default function AddRoomToDayModal({
       contentContainerStyle={styles.modal}
     >
       <View>
-        <Text variant="bodyMedium" style={{ color: theme.colors.onBackground }}>
+        <Text variant="bodyMedium">
           {dayNames[dayMenuState.dayToEdit] || ''}
         </Text>
         <ScrollView>
@@ -66,11 +77,14 @@ export default function AddRoomToDayModal({
                   }
                   onPress={() => checkRoom(room.name)}
                   label={room.name}
+                  key={room.name}
+                  color={room.color}
                 />
               ))}
             {!rooms.length && <Text>No rooms</Text>}
           </View>
         </ScrollView>
+        <Button onPress={() => setAddRoomModalOpen(true)}>Add Room</Button>
         <Button onPress={() => onDayMenuSave(dayMenuState.dayToEdit)}>
           Save
         </Button>

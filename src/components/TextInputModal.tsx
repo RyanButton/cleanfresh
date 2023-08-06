@@ -28,7 +28,7 @@ function TextInputModal({
       contentContainerStyle={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 24,
+        gap: 4,
         backgroundColor: theme.colors.background,
         paddingLeft: 20,
         paddingRight: 20,
@@ -47,9 +47,9 @@ function TextInputModal({
         mode={mode}
         error={error}
         textColor={theme.colors.secondary}
-        autoFocus
       />
       <Button onPress={onSave}>Save</Button>
+      <Button onPress={onDismiss}>Cancel</Button>
     </Modal>
   )
 }

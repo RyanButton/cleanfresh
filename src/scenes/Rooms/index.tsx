@@ -5,11 +5,12 @@ import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack'
-import { useRoomsData } from '../providers/RoomsDataProvider'
-import TextInputModal from '../components/TextInputModal'
-import Jobs from './Jobs'
+import { useRoomsData } from '../../providers/RoomsDataProvider'
+import TextInputModal from '../../components/TextInputModal'
+import Jobs from '../Jobs'
 import { NavigationContainer } from '@react-navigation/native'
-import AddButton from '../components/AddButton'
+import AddButton from '../../components/AddButton'
+import AddRoomModal from './AddRoomModal'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Rooms'>
 
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const colors: Color[] = [
+export const colors: Color[] = [
   'rgba(228, 0, 120, 0.4)',
   'rgba(57, 255, 20, 0.4)',
   'rgba(51, 87, 255, 0.4)',
@@ -94,7 +95,7 @@ export default function RoomsStack() {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function Rooms({ navigation, route }: Props) {
-  const { rooms, addRoom, editRoom, deleteRoom } = useRoomsData()
+  const { rooms, editRoom, deleteRoom } = useRoomsData()
   const [isAddRoomModalOpen, setIsAddRoomModalOpen] = React.useState(false)
   const [isEditRoomModalOpen, setIsEditRoomModalOpen] = React.useState(false)
   const [roomToEdit, setRoomToEdit] = React.useState('')
@@ -114,7 +115,6 @@ function Rooms({ navigation, route }: Props) {
   const [newRoomName, setNewRoomName] = React.useState('')
 
   const showAddRoomModal = () => setIsAddRoomModalOpen(true)
-  const hideAddRoomModal = () => setIsAddRoomModalOpen(false)
   const showEditRoomModal = () => setIsEditRoomModalOpen(true)
   const hideEditRoomModal = () => setIsEditRoomModalOpen(false)
 
@@ -175,20 +175,10 @@ function Rooms({ navigation, route }: Props) {
           ))}
         </ScrollView>
         <AddButton onPress={showAddRoomModal} />
-        <TextInputModal
+        <AddRoomModal
           visible={isAddRoomModalOpen}
-          onDismiss={hideAddRoomModal}
-          label="Add Room"
-          value={newRoomName}
-          onChangeText={setNewRoomName}
-          error={!!newRoomName}
-          mode="outlined"
-          onSave={() => {
-            addRoom(newRoomName, colors[rooms.length])
-            setIsAddRoomModalOpen(false)
-            setNewRoomName('')
-            setMenuOpenState([...menuOpenState, false])
-          }}
+          onDismiss={() => setIsAddRoomModalOpen(false)}
+          onSave={() => setMenuOpenState([...menuOpenState, false])}
         />
         <TextInputModal
           visible={isEditRoomModalOpen}
