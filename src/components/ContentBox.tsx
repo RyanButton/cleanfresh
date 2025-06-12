@@ -1,6 +1,11 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
+import {
+  DarkTheme as NavDarkTheme,
+  DefaultTheme as NavLightTheme,
+  useTheme,
+} from '@react-navigation/native'
 import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
@@ -31,10 +36,15 @@ export default function ContentBox({
   actionBar?: React.ReactNode
   children: React.ReactNode
 }) {
+  const { colors } = useTheme()
+  console.log('colors.background', colors.background)
   return (
-    <View style={styles.wrapper}>
+    <View style={{ ...styles.wrapper, backgroundColor: '#2C2831' }}>
       <View style={styles.header}>
-        <Text variant="titleSmall" style={styles.headerText}>
+        <Text
+          variant="titleSmall"
+          style={{ ...styles.headerText, color: colors.text }}
+        >
           {title}
         </Text>
         {actionBar}

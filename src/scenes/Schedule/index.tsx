@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Stepper from '../../components/Stepper'
 import React from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, useColorScheme, View } from 'react-native'
 import { IconButton, Portal, Provider } from 'react-native-paper'
 import ContentBox from '../../components/ContentBox'
 import { JobsList } from '../../components/JobsList'
@@ -11,6 +11,11 @@ import AddButton from '../../components/AddButton'
 import useDays from '../../hooks/useDays'
 import AddJobToScheduleModal from './components/AddJobToScheduleModal'
 import AddRoomToDayModal from './components/AddRoomToDayModal'
+import {
+  DarkTheme as NavDarkTheme,
+  DefaultTheme as NavLightTheme,
+} from '@react-navigation/native'
+import { useTheme } from '@react-navigation/native'
 
 export type RootStackParamList = {
   Schedule: undefined
@@ -35,8 +40,11 @@ export type SelectedRoomState = {
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export default function RoomsStack() {
+  const colorScheme = useColorScheme()
+  const isDark = colorScheme === 'dark'
+  const navTheme = isDark ? NavDarkTheme : NavLightTheme
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={navTheme}>
       <Stack.Navigator initialRouteName="Schedule">
         <Stack.Screen name="Schedule" component={Schedule} />
       </Stack.Navigator>
@@ -55,6 +63,7 @@ const days = [
 ]
 
 function Schedule() {
+  const { colors } = useTheme()
   const { rooms, setRooms } = useRoomsData()
   const { dayNames } = useDays()
 
@@ -189,7 +198,7 @@ function Schedule() {
   return (
     <Provider>
       <Portal>
-        <ScrollView style={{ margin: 8 }}>
+        <ScrollView style={{ margin: 8, marginBottom: 80 }}>
           <Stepper
             labels={dayNames}
             current={currentDay}

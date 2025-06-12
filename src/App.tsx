@@ -1,10 +1,19 @@
 import { registerRootComponent } from 'expo'
 import React from 'react'
 import RoomsDataProvider from './providers/RoomsDataProvider'
-import { BottomNavigation, Provider as PaperProvider } from 'react-native-paper'
+import {
+  BottomNavigation,
+  MD3DarkTheme,
+  MD3LightTheme,
+  Provider as PaperProvider,
+} from 'react-native-paper'
+
 import Home from './scenes/Home'
 import Rooms from './scenes/Rooms'
 import Schedule from './scenes/Schedule'
+import { useColorScheme } from 'react-native'
+
+
 
 function App() {
   const [index, setIndex] = React.useState(0)
@@ -22,17 +31,23 @@ function App() {
     rooms: Rooms,
     schedule: Schedule,
   })
+
+  const colorScheme = useColorScheme()
+  const isDark = colorScheme === 'dark'
+
+  const paperTheme = isDark ? MD3DarkTheme : MD3LightTheme
+
   return (
-    <PaperProvider>
-      <RoomsDataProvider>
-        <BottomNavigation
-          navigationState={{ index, routes }}
-          onIndexChange={setIndex}
-          renderScene={renderScene}
-        />
-      </RoomsDataProvider>
+    <PaperProvider theme={paperTheme}>
+        <RoomsDataProvider>
+          <BottomNavigation
+            navigationState={{ index, routes }}
+            onIndexChange={setIndex}
+            renderScene={renderScene}
+          />
+        </RoomsDataProvider>
     </PaperProvider>
   )
 }
-registerRootComponent(App)
-export default App
+
+export default registerRootComponent(App)

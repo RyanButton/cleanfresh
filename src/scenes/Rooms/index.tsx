@@ -1,6 +1,6 @@
 import { Card, Menu, Portal, Provider, Text } from 'react-native-paper'
 import React from 'react'
-import { ScrollView, StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet, useColorScheme } from 'react-native'
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
@@ -8,9 +8,13 @@ import {
 import { useRoomsData } from '../../providers/RoomsDataProvider'
 import TextInputModal from '../../components/TextInputModal'
 import Jobs from '../Jobs'
-import { NavigationContainer } from '@react-navigation/native'
+import {
+  DarkTheme,
+  NavigationContainer,
+} from '@react-navigation/native'
 import AddButton from '../../components/AddButton'
 import AddRoomModal from './AddRoomModal'
+import { LightTheme } from '../../theme'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Rooms'>
 
@@ -63,8 +67,11 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export default function RoomsStack() {
+  const colorScheme = useColorScheme()
+  const isDark = colorScheme === 'dark'
+  const navTheme = isDark ? DarkTheme : LightTheme
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={navTheme}>
       <Stack.Navigator initialRouteName="Rooms">
         <Stack.Screen name="Rooms" component={Rooms} />
         <Stack.Screen

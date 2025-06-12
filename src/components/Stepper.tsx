@@ -1,6 +1,9 @@
 import React from 'react'
 import { IconButton } from 'react-native-paper'
 import { StyleSheet, View, Text } from 'react-native'
+import {
+  useTheme,
+} from '@react-navigation/native'
 
 type Props = {
   labels: string[]
@@ -18,6 +21,7 @@ const styles = StyleSheet.create({
 })
 
 export default function Stepper({ labels, current, setCurrent }: Props) {
+  const { colors } = useTheme()
   const handleDecrement = React.useCallback(() => {
     if (current > 0) {
       setCurrent(current - 1)
@@ -37,7 +41,7 @@ export default function Stepper({ labels, current, setCurrent }: Props) {
   return (
     <View style={styles.stepper}>
       <IconButton icon="chevron-left" size={30} onPress={handleDecrement} />
-      <Text>{labels[current]}</Text>
+      <Text style={{ color: colors.text }}>{labels[current]}</Text>
       <IconButton icon="chevron-right" size={30} onPress={handleIncrement} />
     </View>
   )
